@@ -1,0 +1,96 @@
+{% extends 'layout.html' %} {% block body %}
+<div class="add">
+	<h2 class="text-light">Post New Blog</h2>
+	{% from "includes/_formhelpers.html" import render_field %}
+	<form class="form" method="POST" action="">
+		<div class="form-group row">
+			<div class="form-group col-md-6">
+				<input
+					type="text"
+					placeholder="Enter Title"
+					class="form-control"
+					name="title"
+					value="{{request.form.title}}"
+				/>
+			</div>
+			<div class="form-group category col-md-6">
+				<select name="category" id="category" class="form-control">
+					<option value="Miscellaneous" selected="selected">Select Category</option>
+					<option value="Food">Food</option>
+					<option value="Transportation">Travel</option>
+					<option value="Miscellaneous">Miscellaneous</option>
+				</select>
+			</div>
+			<div class="form-group col-md-12 col-lg-12">
+				<textarea placeholder="Type your blog here..." name="blog" class="form-control" rows="10"></textarea>
+			</div>
+			<div class="form-group col">
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Post</button>
+			</div>
+		</div>
+	</form>
+	{% if result != 0%}
+	<h3 class="text-light text-center">History :</h3>
+	<br />
+	<div class="table-responsive">
+		<table class="table table-striped text-light">
+			<tr>
+				<th>Date</th>
+				<th>Title</th>
+				<th>Category</th>
+				<th></th>
+				<th></th>
+			</tr>
+			{% for blog in blogs %}
+			<tr>
+				<td>{{blog.date}}</td>
+				<td>{{blog.title}}</td>
+				<td>{{blog.category}}</td>
+				<td><a href="editBlog/{{blog.id}}" class="btn btn-primary pull-right">Edit</a></td>
+				<td>
+					<button
+						type="button"
+						class="btn btn-danger delete-blog"
+						data-toggle="modal"
+						data-target="#exampleModalCenter"
+						data-id="{{blog.id}}"
+						data-url="{{url_for('deleteBlog', id=blog.id)}}"
+					>
+						Delete
+					</button>
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	<div
+		class="modal fade"
+		id="exampleModalCenter"
+		tabindex="-1"
+		role="dialog"
+		aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true"
+	>
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Are you sure you want to delete this blog?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<form class="modal-form" method="POST">
+						<input type="hidden" name="_method" value="DELETE" />
+						<input type="submit" value="Delete" class="btn btn-danger" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{%endif%} {% endblock %}
